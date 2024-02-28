@@ -1,10 +1,10 @@
 const express = require('express');
-const tourController = require('./../controllers/tourController');
+const tourController = require('../controllers/tourController');
 
 const router = express.Router();
 // // :id? 加這個參數就變成optional
 
-router.param('id', tourController.checkID);
+// router.param('id', tourController.checkID);
 
 // Create a checkBodt middleware
 // check if body contains the name and price property
@@ -14,7 +14,7 @@ router.param('id', tourController.checkID);
 router
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.createTour);
+  .post(tourController.createTour);
 
 router
   .route('/:id')
