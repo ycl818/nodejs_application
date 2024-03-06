@@ -1,5 +1,11 @@
 const dotenv = require('dotenv');
 
+process.on('uncaughtException', (err) => {
+  console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+
 dotenv.config({ path: './config.env' });
 const mongoose = require('mongoose');
 const connectDB = require('./configs/dbConn');
@@ -26,9 +32,17 @@ const port = process.env.PORT || 3000;
 
 mongoose.connection.once('open', () => {
   console.log('Connected to 線上版 mongoDB');
-  app.listen(port, () =>
-    console.log(`Server running on port ${port} http://localhost:${port}`),
-  );
 });
 
+const server = app.listen(port, () =>
+  console.log(`Server running on port ${port} http://localhost:${port}`),
+);
 ///
+
+process.on('unhandledRejection', (err) => {
+  console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+  console.log(err.name, err.message);
+  server.close(() => {
+    process.exit(1);
+  });
+});
